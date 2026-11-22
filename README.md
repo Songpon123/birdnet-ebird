@@ -4,6 +4,28 @@
 eBird / Macaulay Library แล้วให้คนฟังตรวจทีละคลิปก่อนคัดลอกคลิปที่ยืนยันแล้วไปโฟลเดอร์ `Ready/`
 ทุกผลจาก AI เป็น "ตัวเลือกให้ตรวจ" ไม่ใช่การยืนยันชนิด
 
+## ดาวน์โหลดและคู่มือ
+
+| | |
+|---|---|
+| **โปรแกรม** | [หน้า Releases](https://github.com/Songpon123/birdnet-ebird/releases/latest) — แตก zip แล้วเปิดได้เลย มี Python, ffmpeg และโมเดล BirdNET ในตัว ไม่ต้องติดตั้งอะไรเพิ่ม<br>• `BirdNET-eBird-mac-arm64-….zip` — Mac ชิป Apple Silicon (M1 ขึ้นไป), macOS Sequoia 15.2 ขึ้นไป<br>• `BirdNET-eBird-win64-….zip` — Windows 10/11 64-bit (รุ่นทดลอง) |
+| **คู่มือการใช้** | **[อ่านบนเว็บ](คู่มือการใช้.md)** · **[ดาวน์โหลด PDF](https://github.com/Songpon123/birdnet-ebird/releases/latest/download/BirdNET-eBird-manual-th.pdf)** — ทีละขั้นตามลำดับงานจริง พร้อมภาพหน้าจอ 24 ภาพ (อยู่ในไฟล์ zip ด้วย) |
+
+![แท็บ Review clips: ฟังคลิป ดูภาพเสียง และตัดสินทีละคลิป](docs/images/review-clip.png)
+
+**เริ่มใช้ใน 5 ขั้น** (รายละเอียดอยู่ในคู่มือ)
+1. แตก zip แล้วเปิดโปรแกรม — Mac: ดับเบิลคลิก `BirdNET-eBird.command` (ครั้งแรกกด System Settings › Privacy & Security › Open Anyway) · Windows: ดับเบิลคลิก `Create desktop shortcut.bat` ครั้งเดียว
+2. ใส่ API key ของตัวเองในแท็บ Settings (ไม่บังคับ: xeno-canto สำหรับเสียงอ้างอิง, eBird สำหรับข้อมูล checklist)
+3. วางลิงก์ eBird checklist ใน Settings › Field logs › Add link — ไฟล์เสียงได้พิกัดจาก checklist เอง
+4. กด **▶ Analyze** เลือกโฟลเดอร์ไฟล์เสียง แล้วกด Start analysis
+5. ฟังตรวจในแท็บ Review clips แล้ว Approve คลิปที่ถูก — คลิปไปรวมที่ `Ready/<checklist>/<ชนิด>/` พร้อมอัปโหลดขึ้น eBird
+
+> ทุกชื่อชนิดที่ AI ทายเป็นตัวเลือกให้ฟังตรวจ ไม่ใช่คำตอบ ฟังยืนยันก่อน Approve ทุกครั้ง
+
+---
+
+> README นี้เป็นรายละเอียดเชิงเทคนิคทั้งหมด ถ้าเพิ่งเริ่มใช้ อ่าน[คู่มือการใช้](คู่มือการใช้.md)ก่อน
+>
 > ฉบับย่อสำหรับเริ่มใช้ (ไทย/อังกฤษ) อยู่ที่ `อ่านก่อนใช้.txt`
 >
 > เดินอัดต่อเนื่องด้วย Zoom H4essential, ใช้ MARK ย้อนหาเสียง และเตรียมใช้ XY คู่กับ NTG5:
@@ -216,11 +238,11 @@ normalize −3 dBFS — Add…, เรียงด้วย Up/Down, กด Merg
     BirdNET จึงแสดงทั้งคลิป — แค่วิธีดู/ฟัง ไฟล์คลิปไม่เปลี่ยน
   — แค่วิธีแสดง คลิปเสียงที่ตัดไว้ (และไฟล์ที่อัปโหลด) ไม่เปลี่ยน
 - **ปุ่ม**: ▶ Play, ■ Stop, **BirdNET boxes ↗** (เปิดภาพ .png ที่มีกรอบเสียงของ BirdNET), Reference sounds… (ปุ่ม Second opinion อยู่แถว Look up species ด้านล่าง)
-- **📷 รูปของคุณตอนได้ยินเสียง** (แถบภาพย่อใต้ภาพเสียง ขึ้นเฉพาะเมื่อมีรูป): รูปที่ถ่ายระหว่างเสียงหรือห่างไม่เกิน 2 นาที
-  เรียงจากใกล้สุด บอกเวลาถ่าย ห่างจากเสียงกี่วินาที และชื่อชนิดถ้า Log จับคู่ไว้ กดภาพย่อ = เปิดรูป
+- **📷 Your photos then** (บรรทัดเดียวใต้ภาพเสียง ขึ้นเฉพาะเมื่อมีรูป): ชนิดที่คุณถ่ายรูปไว้ระหว่างเสียงหรือห่างไม่เกิน 2 นาที
+  เรียงจากใกล้สุด เช่น *Common Kingfisher (13 s after) · 1 not sorted* — บอกเป็นชื่อชนิด ไม่แสดงภาพ
   - เวลาถ่ายมาจาก Log (`files.csv`) และจาก EXIF ของรูปใน `<วัน>/Pictures` เอง (JPG/DNG อ่านเอง, CR3 ใช้ exiftool ถ้ามีในเครื่อง)
-    — วันที่ `files.csv` ว่าง (เช่น 2 พ.ย.) ก็ยังได้เวลาจากตัวรูป
-  - รูปที่ย้ายไป Google Drive แล้ว (`My Drive/…/<YYYYMMDD>…`): ใช้เวลาจาก Log แล้วหาไฟล์ตามชื่อใน Google Drive บนเครื่อง เปิดเฉพาะ 6 รูปที่แสดง
+  - ชื่อชนิดมาจาก Log หรือชื่อโฟลเดอร์ที่แยกรูปไว้ (`Pictures/Done/Black Stork/…`) รูปที่ยังไม่ได้แยกนับเป็น *not sorted*
+  - รูปที่ย้ายไป Google Drive แล้ว (`My Drive/…/<YYYYMMDD>…`): ใช้เวลาจาก Log แล้วหาไฟล์ตามชื่อใน Google Drive บนเครื่อง (ดูแค่รายชื่อไฟล์)
   - เวลาในรูปเป็นนาฬิกากล้อง: ตั้ง *Camera minus recorder clock* ในหน้าต่าง Recorder flags ถ้านาฬิกาไม่ตรงกัน
   - ถ่ายใกล้เวลาเดียวกันไม่ได้แปลว่าเป็นนกตัวเดียวกับเสียง
 - **Checklist ↗** (แถวเดียวกับ eBird ↗) เปิด eBird checklist ที่ไฟล์เสียงของคลิปนี้ใช้ และบรรทัดรายละเอียดคลิปบอกว่าใช้ checklist ไหน
@@ -264,7 +286,7 @@ normalize −3 dBFS — Add…, เรียงด้วย Up/Down, กด Merg
   - ไฟล์ที่ถูกแก้นอกแอป ไฟล์ที่หาย หรือปลายทางมีไฟล์ชื่อเดียวกัน จะไม่ถูกย้าย และแจ้งใน log
   - โฟลเดอร์ผลวิเคราะห์รายเวลา (`0634_v3pruned/<ชนิด>/`) ไม่เปลี่ยน
 - **✓ Approve → Ready**: ต้องมีชื่อสามัญ + ชื่อวิทยาศาสตร์ + คะแนนคุณภาพ, คลิปต้องไม่เกิน 500 MB
-  (ขีดจำกัด eBird) — คัดลอกไป `Ready/<ชื่อสามัญ>/` ชื่อไฟล์มีประเภทเสียงถ้าเลือกไว้ (`…_Flight-call_R3.wav`)
+  (ขีดจำกัด eBird) — คัดลอกไป `Ready/<checklist>/<ชื่อสามัญ>/` (วันที่ไม่มี Log = `Ready/<ชื่อสามัญ>/`) ชื่อไฟล์มีประเภทเสียงถ้าเลือกไว้ (`…_Flight-call_R3.wav`)
   ไว้ติดแท็กตอนอัปโหลดขึ้น eBird
   **Reject** = **ชนิดผิด** (ลบสำเนาใน Ready ถ้ามี) — ชนิดถูกแต่เสียงไม่ดีให้ Approve คะแนน 1
   (กติกานี้ใช้วัดความแม่นใน Review progress) — **Not sure**: ฟังแล้วแต่เสียงไม่ชัดพอจะระบุชนิด (ไม่เข้า Ready,
@@ -1165,6 +1187,7 @@ PATH="$PWD:$PATH" ./python/bin/python3.12 -m unittest discover -s tests       # 
 tools/build_ffmpeg.sh                                                          # สร้าง ffmpeg ใหม่
 tools/build_windows.sh                                                         # สร้างรุ่น Windows
 ./python/bin/python3.12 -I tools/build_country_checklists.py                   # สร้างข้อมูล checklist ใหม่
+python3 tools/build_manual_pdf.py                                              # สร้าง คู่มือการใช้.pdf ใหม่ (ใช้ Google Chrome)
 ```
 - อัปเดต checklist (Scythebill ออกรุ่นใหม่ / eBird เปลี่ยนระบบชื่อ): แก้ `SCYTHEBILL_COMMIT` และ sha256
   ใน `tools/build_country_checklists.py` แล้วรัน — ถ้าระบบชื่อเปลี่ยนปี (เช่น 2026) ต้องเปลี่ยนชื่อไฟล์
@@ -1225,9 +1248,10 @@ tools/build_windows.sh                                                         #
 
 ## 15. สัญญาอนุญาตและเครดิต
 
-- **BirdNET** (Cornell Lab of Ornithology & Chemnitz University of Technology): โมเดลใช้สัญญา
-  CC BY-NC-SA 4.0 — ใช้เพื่อการศึกษา/วิจัย ไม่ใช่เชิงพาณิชย์; รุ่นย่อ BirdNET+ V3.0-preview3.1 pruned
-  (Zenodo record 20703646) ระบุสัญญา CC BY-SA 4.0
+- **BirdNET** (Cornell Lab of Ornithology & Chemnitz University of Technology) — Powered by BirdNET:
+  โมเดลเสียง BirdNET+ V3.0 Developer Preview 3.1 (และรุ่นย่อ pruned, Zenodo record 20703646) ใช้สัญญา CC BY-SA 4.0
+  ร่วมกับ Terms of Use ที่ห้ามใช้เพื่อการล่าสัตว์ผิดกฎหมายและงานทางทหาร; โมเดลพื้นที่ BirdNET+ Geomodel V3.0 ใช้ Apache 2.0
+  — ข้อความเต็มอยู่ในโฟลเดอร์ `LICENSES/` และสรุปใน `MODEL_CREDITS.txt`
 - **Kaleidoscope Pro** (Wildlife Acoustics): แนวคิดเริ่มต้นของหน้าเสียง Prism มาจากโปรแกรมนี้
   หน้าตาปัจจุบันเป็นของแอปเอง ไม่ได้ใช้โค้ดหรือไฟล์ของโปรแกรมนั้น
 - **AVONET**: Tobias et al. 2022, *Ecology Letters*, doi:10.1111/ele.13898 — ข้อมูล CC BY 4.0

@@ -1,0 +1,18 @@
+BirdNET models bundled with BirdNET → eBird clipper 1.4.0 (macOS / Windows)
+Powered by BirdNET.
+
+Acoustic model: BirdNET+ V3.0 Developer Preview 3.1, 11K species (ONNX FP16, used by default).
+Authors: Mario Lasseck, Maximilian Eibl, Holger Klinck, Stefan Kahl.
+Source: https://zenodo.org/records/20703646
+License: Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0) with the BirdNET+ V3.0 Terms of Use,
+which prohibit use for poaching or for any military purpose: LICENSES/BirdNET-V3-TERMS_OF_USE.txt
+
+Smaller comparison model: BirdNET+ V3.0-preview3.1 Global 11K FP16 pruned (same Zenodo record, same terms).
+
+Geographic model: BirdNET+ Geomodel V3.0 (ONNX FP16), loaded through the birdnet Python package.
+Authors: BirdNET team. Source: https://github.com/birdnet-team/geomodel
+License: Apache License 2.0 (LICENSES/BirdNET-Geo-LICENSE-MODELS.md);
+responsible-use guidance: LICENSES/BirdNET-Geo-ACCEPTABLE_USE.md
+
+All model files are unmodified official exports.
+Model output is a suggestion: listen and review every clip before identifying a bird or uploading it.

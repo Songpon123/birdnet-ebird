@@ -88,6 +88,11 @@ fi
 cp "$program/tools/windows/BirdNET eBird.bat" "$program/tools/windows/Create desktop shortcut.bat" "$stage/"
 cp "$program/tools/windows/create_shortcut.ps1" "$stage/tools/"
 cp "$program/tools/windows/README-Windows.txt" "$program/README.md" "$stage/"
+cp -R "$program/LICENSES" "$program/MODEL_CREDITS.txt" "$stage/"          # สัญญาอนุญาตของโมเดล BirdNET
+cp "$program/คู่มือการใช้.md" "$stage/" && cp -R "$program/docs" "$stage/"   # คู่มือ + ภาพหน้าจอ
+if [[ -f "$program/คู่มือการใช้.pdf" ]]; then                             # สร้างด้วย tools/build_manual_pdf.py
+    cp "$program/คู่มือการใช้.pdf" "$stage/"
+fi
 
 echo "Checking DLL dependencies ..."
 uv run --quiet --no-project --with pefile python "$program/tools/windows/check_dlls.py" "$stage"

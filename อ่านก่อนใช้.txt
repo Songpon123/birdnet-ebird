@@ -1,6 +1,7 @@
 ============================================================
   BirdNET -> eBird clipper (macOS)     อ่านก่อนใช้ / READ ME FIRST
 ============================================================
+คู่มือทีละขั้นพร้อมภาพ / Step-by-step manual with pictures: คู่มือการใช้.md
 รายละเอียดทั้งระบบ / Full documentation: README.md
 
 ------------------------------------------------------------
@@ -184,7 +185,7 @@ Using it
      "heard …" and the clock under the picture give the real time, to match with photos.
      The .png with BirdNET boxes: the BirdNET boxes ↗ button
   5. Helpers: Reference sounds… and Second opinion (xeno-canto API key), the eBird line
-     (eBird API key), Photos you took while the bird was heard (within 2 minutes) appear as thumbnails under the sound; click to open.
+     (eBird API key), a line under the sound names the species you photographed while the bird was heard (within 2 minutes).
      Buttons: eBird / Photos / Sounds / xeno-canto / Checklist (the eBird checklist this recording uses).
      Paste your own keys in the Settings tab and click Save key.
      The eBird line's second row says whether the species was reported in the province on the
