@@ -1,0 +1,250 @@
+============================================================
+  BirdNET -> eBird clipper (macOS)     อ่านก่อนใช้ / READ ME FIRST
+============================================================
+รายละเอียดทั้งระบบ / Full documentation: README.md
+
+------------------------------------------------------------
+ภาษาไทย
+------------------------------------------------------------
+เครื่องที่ใช้ได้
+  - Mac ชิป Apple Silicon (M1 ขึ้นไป) และ macOS Sequoia 15.2 ขึ้นไป
+  - ไม่ต้องติดตั้งอะไรเพิ่ม (มี Python, ffmpeg/ffprobe ในโฟลเดอร์แล้ว)
+  - มีโมเดล BirdNET 3.0 ใน data/birdnet แล้ว วิเคราะห์ได้โดยไม่ต้องต่อเน็ต
+
+เปิดโปรแกรม
+  - ดับเบิลคลิก BirdNET eBird.app บน Desktop (ใช้โฟลเดอร์
+    Projects/Sound Recording/Programs/BirdNET-eBird-mac อย่าย้ายโฟลเดอร์นี้)
+  - หรือดับเบิลคลิก BirdNET-eBird.command ในโฟลเดอร์โปรแกรม
+  - ครั้งแรกบนเครื่องใหม่ ถ้า macOS บอกว่าเปิดไม่ได้: System Settings > Privacy & Security
+    > Open Anyway  หรือใน Terminal:  xattr -dr com.apple.quarantine /path/to/BirdNET-eBird-mac
+  - ส่งให้เพื่อน: รัน tools/make_share_zip.sh ได้ zip บน Desktop (ไม่มี API key ของคุณ)
+    ถ้าคัดลอกเอง ห้ามใส่ data/settings.json (มี API key) และอย่าส่งเฉพาะ BirdNET eBird.app
+
+เครื่องมือเพิ่ม 2026-10-23
+  - Listen tools… ใต้ภาพ Review / ค้นเสียง: ลากเลือกเวลาและความถี่,
+    ฟัง stereo/mix/left/right, ปรับความเร็ว 0.5–2× โดยคง pitch และวนฟัง Loop selection
+    เป็นเสียงตัวอย่าง ไม่แก้คลิปหรือต้นฉบับ
+  - Find sounds > Find sound events (without BirdNET)…: สแกนเหตุการณ์ด้วยย่านความถี่,
+    ความยาวและระดับเหนือพื้นหลัง เลือกไฟล์ที่ยังไม่เคยวิเคราะห์ได้ ฟังแล้วเพิ่มเข้า Pending
+  - Sound groups มีโหมด Sound events แยกตัวเสียงก่อนจัดกลุ่ม และเก็บทุกเหตุการณ์ที่ผ่านตัวตรวจ;
+    เลือก 3 s windows เพื่อใช้วิธีเดิม
+  - Your recognizers เลือก Any sound หรือ Song/Call/ประเภทอื่นก่อนฝึกได้
+    Training examples / confusing sounds… ใช้ดูและเปิดตัวอย่างบวก/ลบ
+  - Find sounds > Import detections CSV…: พรีวิว cluster.csv/CSV ที่มีชื่อไฟล์, offset,
+    duration; ย้ายเครื่องให้เลือก Audio folder ใหม่ เลือกชนิดก่อน Add selected
+    CHANNEL 0 = ซ้าย, 1 = ขวา; คลิปเข้า Pending เสมอ ชื่อเดิมใน CSV เป็นคำใบ้
+  - Settings > Analysis presets…: บันทึก/เรียกชุดตั้งค่าและ Export/Import JSON
+    ไม่เก็บ API key/วันเวลา/ไฟล์/Force redo เลือกเก็บพิกัดสถานที่ได้
+  - รายละเอียดและข้อจำกัดอยู่ใน README.md หัวข้อ Listening tools, Sound events
+
+เครื่องมือเพิ่ม 2026-10-24
+  - Second look (Settings, เปิดเป็นค่าเริ่มต้น): เสียงที่ BirdNET ให้ 0.2 ถึง min_conf และควรพบที่นี่
+    ให้ BirdNET ฟังซ้ำโดยวางหน้าต่างตรงเสียง ถึง min_conf = ได้คลิป คะแนนในตารางขึ้น "(2nd look)"
+    ฟังยืนยันเหมือนคลิปอื่น (REC-001: ได้เพิ่ม 9 คลิป เช่น Gray Wagtail, Eurasian Coot, Little Owl)
+  - Find sounds > Near misses in this result…: ชนิดที่ BirdNET เกือบเจอแต่ยังไม่มีคลิป + ผลฟังซ้ำ
+    ฟังแล้ว Add selected หรือ ✚ Add all that passed the second look (ใช้กับผลที่วิเคราะห์ไว้ก่อน)
+  - Find sounds > Expected species here…: ชนิดที่ควรพบที่จุด/สัปดาห์นั้น (%) เทียบกับคลิปที่มี
+    และเสียงที่ BirdNET ได้ยิน (ตัวหนา = ได้ยินแต่ยังไม่มีคลิป)
+  - หน้าต่าง Add clip yourself: ป้ายชื่อที่ BirdNET ทายทุก 3 วิบนภาพ (ติ๊ก BirdNET labels)
+    ✗ = นกที่ไม่ควรพบที่นี่, สีเทา = ต่ำกว่า min_conf
+  - Listen tools…: หน้าเสียง Prism (ค่าเริ่มต้น; เปลี่ยนเป็น Macaulay ได้ที่ Display)
+    แถบควบคุมด้านบน + spectrogram FFT 256 สีม่วง-ชมพู-ส้ม + คลื่นเสียงด้านล่าง, ลากกรอบเลือก, คลิกขวา = เส้นอ้างอิงความถี่,
+    ดับเบิลคลิกแกนเวลา = เวลาจริง, Brightness/Contrast, ช่องซ้าย/ขวา, Save screen… = บันทึกภาพ
+    ปุ่ม Analysis = Prism Analysis: สเปกตรัม + dBmin/dBmax/dBmean, Fpmin/Fpmax/Fpmean/Fppeak ของกรอบที่เลือก
+    > Compare with reference sounds…: เทียบเสียงในกรอบกับเสียงอ้างอิงหลายชนิด (เช่น Pale-legged กับ Sakhalin
+      Leaf Warbler) ทั้งความถี่ที่ดังสุด ย่านเสียง และความยาว — Add species เพิ่มชนิดที่คล้ายกัน, Add my own files…
+      (ไฟล์ชื่อแบบ xeno-canto เข้าชนิดเอง) แอปสรุป Closer to … / Inconclusive — ลากกรอบเฉพาะเสียงของนกตัวนั้น
+  - Settings > BirdNET model: 3.0-pruned = โมเดลรุ่นย่อ (แทน 2.4) ผลแยกโฟลเดอร์ _v3pruned
+    ไว้เทียบ — ทดลองแล้วพลาดคลิปที่ถูกมากกว่าโมเดลเต็ม จึงยังใช้ 3.0-preview เป็นค่าเริ่มต้น
+
+เปลี่ยนแปลง 2026-10-25
+  - ผลลัพธ์จัดตามวันที่อัด: <โฟลเดอร์ผลลัพธ์>/2026.10.17/1451_v3preview/, 1551_v3preview/ …
+    (วันเดียวกันอยู่ด้วยกัน แต่ละไฟล์/เวลาเริ่มอัดแยกโฟลเดอร์) ผลแบบเก่า 2026.10.17_1451_v3preview/
+    แอปย้ายเข้าโฟลเดอร์วันให้เองตอนเปิดแอป พร้อมผลตรวจและแคช
+  - คลิปที่ Approve แล้วรวมอยู่ที่ <วัน>/Ready/<ชนิด>/ ข้างโฟลเดอร์เวลา เช่น 2026.10.25/Ready/Asian Tit/
+    (Ready เดิมในแต่ละโฟลเดอร์เวลา แอปย้ายมารวมให้ตอนเปิดแอป)
+  - แก้แอปปิดตัวเอง (Segmentation fault) เมื่อปิดหน้าต่างขณะมีงานเบื้องหลัง (Tcl/Tk 9)
+  - ตัวเทียบเสียงวัดจังหวะด้วย: โน้ตต่อวินาที ความสม่ำเสมอ ระดับเสียงขึ้นลง โน้ตท้ายวลี และการรัว (song ของ Pale-legged รัว Sakhalin ไม่รัว)
+  - ตัวเทียบเสียง (Compare Hz… ใต้ภาพในแท็บ Review หรือ ∝ > Compare… ใน Listen tools): เลือกเสียงของคุณในภาพได้เลย
+    กรอบเสียงของ BirdNET (เหมือนภาพ Picture with BirdNET boxes) — Auto เลือกกลุ่มเสียงที่ร้องซ้ำ (กดซ้ำ = กลุ่มถัดไป),
+    คลิกกรอบ = ใช้/ไม่ใช้, ลากในภาพ = กรอบของคุณเอง, หรือเปลี่ยนเป็น Sound detector
+    ▶ Play my sound = ฟังเสียงของคุณ (ช่วงกรอบที่เลือก) สลับกับ ▶ Play reference ได้ในหน้าต่างเดียว, ■ Stop = หยุด
+    Compare spectrograms… = ภาพเสียงของคุณ + ชนิดที่ 1 + ชนิดที่ 2 … เรียงกัน สเกลเวลา/ความถี่เดียวกัน ดูรูปร่างเสียง
+    ของชนิดที่ความถี่ใกล้กันมาก (เช่น Chestnut-flanked กับ Swinhoe's White-eye) เลือกไฟล์อ้างอิง/เสียงถัดไป และกดฟังทีละแถวได้
+  - ตัวเทียบต้องมีเสียงอ้างอิงอย่างน้อย 5 ไฟล์ต่อชนิด จากผู้บันทึก 3 คน (น้อยกว่านี้ผลขึ้น Provisional และ Find references
+    โหลดเพิ่มให้ครบเอง) / Train on references = ฝึกตัวแยกชนิดจากเสียงอ้างอิงที่โหลดไว้ (BirdNET 3.0) บอกว่าทายไฟล์ที่ไม่ได้ฝึก
+    ถูกกี่ไฟล์ แล้วทายเสียงของคุณ — เป็นตัวช่วยคัดก่อน ไม่ใช่การระบุชนิด
+  - Purity = ความใสของเสียง (สูง = หวีดใส, ต่ำ = แหบ) ในตารางและเหนือกรอบในภาพ — Chestnut-flanked ใสกว่า Swinhoe's
+  - Settings > Field logs > วางลิงก์ eBird checklist แล้วกด Add link = ดึงชนิด จำนวนรูป วันเวลา สถานที่ พิกัดจาก eBird เลย (ต้องมี eBird API key)
+    ไฟล์รูปและเวลาถ่ายดึงจากลิงก์ไม่ได้ ต้องเพิ่มโฟลเดอร์ Log
+  - Settings > Field logs > Add Log folder… = เลือกโฟลเดอร์ Log (…/YYYYMMDD/Log) ของโปรแกรมจัดรูป แอปบอกว่าชนิดนั้นอยู่ใน eBird checklist
+    ของไฟล์เสียงนี้ไหม กี่ตัว มีรูปไหม (ในตัวเทียบและแท็บ Review) เพิ่มครั้งเดียว วันอื่นหาให้เอง
+  - หลังเพิ่มลิงก์หรือ Log หน้าต่าง Match recordings เด้งขึ้น แถวละไฟล์เสียงของวันนั้น เลือก checklist จาก drop down แล้วบันทึกเลย
+    ไฟล์ที่ไม่ได้เลือก (by time) แอปเดาจากเวลาเริ่มอัด วันที่มีหลาย checklist ควรดูทุกครั้ง
+  - Vol ข้างปุ่ม Play/Stop (แท็บ Review และทุกหน้าที่ฟังเสียง) = ระดับเสียงตอนฟัง 0–300% ค่าเดียวทุกหน้า ปรับระหว่างเล่นได้ ไม่แตะไฟล์คลิป
+    ปุ่ม Normal กลับไป 100%
+  - พิกัดมาจาก Log: ไฟล์เสียงที่ไม่มี geotag ใช้พิกัดของ checklist เอง ไม่ต้องกรอกทีละไฟล์ ไฟล์ที่เริ่มอัดเกิน 6 ชั่วโมงหลังเริ่ม checklist
+    แอปไม่เดา ต้องเลือก checklist จาก drop down หรือกรอกพิกัดเอง
+
+เปลี่ยนแปลง 2026-10-31
+  - Choose audio folder ค้นโฟลเดอร์ย่อยด้วย (Zoom เก็บแต่ละไฟล์ในโฟลเดอร์ของตัวเอง) เลือก Sounds หรือ Raw ได้เลย
+  - Flag ที่กดบนเครื่องอัด Zoom: Find sounds > Recorder flags… แสดงทุกจุด คลิปและรูปถ่ายที่อยู่ใกล้ กดฟัง/เพิ่มคลิปตรงจุดนั้นได้
+    แท็บ Review มีคอลัมน์ Flag, Show > Near a flag และเส้นแดงบนภาพเสียง — flag ไม่เปลี่ยนคะแนนและไม่ยืนยันชนิด
+    เวลาในรูปเป็นนาฬิกากล้อง ถ้าไม่ตรงกับเครื่องอัดตั้ง Camera minus recorder clock ในหน้าต่างนั้น
+  - ไฟล์ใน Ready ที่มี Background species ขึ้นต้นด้วยชื่อชนิดนั้น (with-Daurian-Redstart__…) เห็นใน Finder และเรียงรวมกันท้ายโฟลเดอร์ชนิด
+  - ปุ่ม Upload sheet… ในแท็บ Review clips: รายการไฟล์ใน Ready ของวันนั้น เปิดดูคู่กับหน้า eBird ตอนอัปโหลด
+    Additional species = ใส่ช่อง Additional Species ใน Manage Media, Add to checklist first = เพิ่มชนิดนี้ใน checklist ก่อน
+    (Edit Species List จำนวน X), BirdNET also heard = ยังไม่ยืนยัน ฟังก่อน
+  - แก้เวลาเริ่มอัดของไฟล์ Zoom ที่เคยกลายเป็น 00:00
+  - เก็บผลแยกตามวันได้: เลือกเสียงใน <YYYYMMDD>/Sounds แล้ว Output folder เปลี่ยนเป็น Sounds/Done ของวันนั้นให้เอง
+    เมนู Results, Review progress และ Recorder flags รวมผลจากทุกโฟลเดอร์ที่เคยใช้ ไม่ต้องเปลี่ยน Output กลับไปดูผลเก่า
+
+ใช้งาน
+  1. กด Choose audio file หรือ Choose audio folder (แถบบนสุด)
+  2. หน้าต่าง Recording details แสดงวันเวลา/พิกัดที่อ่านได้ กรอกเฉพาะที่ขาด
+     วันที่ 20261006, เวลา 0929, พิกัด 30.5928,114.3055 หรือวางลิงก์ Google Maps
+     ติ๊ก Site habitat ถ้าต้องการ (เช่น Forest หรือ Forest + Marsh) แล้วกด Start analysis
+  3. เสร็จแล้วแอปเปิดแท็บ Review clips ให้ ผลเก่าทุกชุดอยู่ในเมนู Results
+     (เปิดแอปครั้งหน้าจะกลับมาที่ชุดล่าสุดเอง ไม่ต้องวิเคราะห์ใหม่)
+  4. เลือกคลิป ฟัง: คลิกบนภาพ = เล่นจากจุดนั้น (หรือ ▶ Play) เส้นอยู่กลางภาพ ภาพเลื่อนผ่านเส้น
+     ภาพแบบ Macaulay: ขาวดำ 0-12 kHz ทีละ 6 วิ (Zoom − / + : 1.5-60 วิ), แถบฟ้า = ช่วงที่ BirdNET เจอ,
+     แถบเล็กด้านล่าง = ทั้งคลิป (คลิก/ลากเพื่อเลื่อน) + แถบความคืบหน้า, Listen tools… = ภาพใหญ่
+     ติ๊ก BirdNET parts only = เห็น/เล่นเฉพาะช่วงที่ BirdNET ได้ยินชนิดนี้ (เส้นแดง = รอยต่อ)
+     เวลาจริงที่ได้ยิน (heard …) และเวลาใต้ภาพ ไว้เทียบกับเวลาในภาพถ่าย
+     ภาพ .png ที่มีกรอบของ BirdNET: ปุ่ม BirdNET boxes ↗
+  5. ตัวช่วย: Reference sounds…, Second opinion (ต้องมี xeno-canto API key),
+     บรรทัด eBird (ต้องมี eBird API key), Look up species: eBird / Photos / Sounds / xeno-canto
+     ใส่ key ของตัวเองในแท็บ Settings แล้วกด Save key
+     บรรทัด eBird บรรทัดที่สองบอกว่าช่วงเดียวกันของปีก่อน ๆ มีรายงานในมณฑลนี้ไหม
+     (⚠ not reported = ฟังให้ดี; คลิปเหล่านี้ขึ้น Check ในตาราง)
+  6. แก้ชื่อชนิดถ้าผิด ให้ Audio quality 1-5 แล้วกด ✓ Approve -> Ready หรือ Reject (Reject = ชนิดผิด;
+     ชนิดถูกแต่เสียงไม่ดีให้ Approve คะแนน 1; เสียงไม่ชัดพอจะระบุ = Not sure ไม่นับถูกหรือผิด)
+     ดูความคืบหน้าที่ Review progress…
+     Sound type (Song / Call / Flight call …): แอปเดา song/call ให้ ("guess: song (sure)" = มั่นใจ
+     เติมให้แล้ว ถูกราว 9 ใน 10, "call? (not sure)" = ฟังแล้วเลือกเอง) ประเภทเสียงอยู่ในชื่อไฟล์ใน Ready
+     Background species = ชนิดอื่นที่ได้ยินในคลิปนี้ (คั่นด้วย ;) คลิปที่ยังไม่ได้ตรวจ แอปเติมชนิดที่ BirdNET
+     เจอช่วงเดียวกันให้ ฟังแล้วลบชนิดที่ไม่ได้ยิน, คลิกช่อง = เลือกเพิ่ม, พิมพ์หลัง ; = ค้นชื่อ
+     ชนิดหลักยังเป็นชนิดที่ BirdNET ทาย ถ้ายังได้ยินชนิดนั้น แม้ชนิดอื่นจะดังกว่า
+     บันทึกลง summary.xlsx (คอลัมน์ Background species) ไว้ใส่ตอนอัปโหลด
+     อัปโหลดไฟล์ใน Ready/ ขึ้น eBird / Macaulay Library
+  7. เสียงที่ BirdNET ไม่เจอ: กด ✚ Add clip yourself… (แท็บ Review) -> Go to เช่น 15:04
+     -> ลากบนภาพเลือกช่วงเสียง -> Ask BirdNET about the selection (คำใบ้) หรือพิมพ์ชื่อชนิดเอง
+     -> ✚ Add clip to Review แล้วตรวจ/Approve ตามปกติ (วิเคราะห์ใหม่ก็ไม่ลบคลิปเหล่านี้)
+  8. Find sounds ▾ (แท็บ Review): Similar to the selected clip = หาเสียงที่คล้ายคลิปนี้
+     ในไฟล์/ผลชุด/ทุกผลชุด, Sound groups = กลุ่มเสียงที่ BirdNET ยังไม่ได้ตัด, Your recognizers = ตัวจำแนก
+     ที่ฝึกจากคลิปที่คุณ Approve (ชนิดละ 8 คลิปขึ้นไป), Near misses = เสียงที่ BirdNET เกือบเจอ,
+     Expected species here = ชนิดที่ควรพบที่นี่ — ฟังแล้วเลือกหลายเสียง ✚ Add selected เป็นคลิป
+  9. ตรวจเร็ว: คลิกตารางคลิปแล้วใช้ปุ่ม 1-5 = คุณภาพ, Enter/A = Approve, R = Reject, U = Not sure, Space = เล่น,
+     ↑/↓ = คลิปก่อน/ถัดไป (กดบนภาพเสียงก็ได้)
+     (ติ๊ก then next pending = ไปคลิปถัดไปเอง), ช่อง Show = แสดงเฉพาะ Pending/Check ฯลฯ
+
+ควรรู้
+  - ทุกผลจาก AI ต้องฟังยืนยันก่อน Approve ค่าความมั่นใจไม่ใช่คะแนนคุณภาพเสียง
+  - ชื่อชนิดเป็นชื่อตาม eBird (เช่น BirdNET เรียก Black-throated Bushtit = eBird Black-throated Tit)
+  - แอปตัดชนิดที่ไม่ควรพบในพื้นที่/ฤดูนั้นทิ้งเอง ถ้าติ๊ก Site habitat นกน้ำในจุดที่ไม่มีน้ำ
+    ต้องคะแนน >= 0.8 จึงจะแสดง (พร้อมคำเตือน)
+  - บันทึกในจีน ฮ่องกง ไต้หวัน ไทย: บรรทัด Checklist ข้างปุ่ม Look up species บอกว่าชนิดนี้เป็น
+    นกประจำถิ่น นกหายาก หรือไม่อยู่ใน checklist ของประเทศ (ไม่ต้องต่อเน็ต) ถ้าขึ้น "check the name"
+    แปลว่า eBird แยกชนิดแล้ว เช่น Striated Heron ในจีน = Little Heron ให้แก้ชื่อก่อน Approve
+  - แถบล่าง: งานที่รันอยู่, ■ Stop (ไฟล์ที่เสร็จแล้วยังอยู่), Jobs… (คิวงาน),
+    Show details (log)  ปิดโปรแกรมระหว่างวิเคราะห์ได้ รันใหม่จะทำต่อ
+  - เวลา UTC ในไฟล์ (เช่น m4a จากมือถือ) แปลงตาม time zone ของ Mac ตั้งให้ตรงกับจุดที่บันทึก
+  - force redo = วิเคราะห์ใหม่และล้างผลตรวจกลับเป็น Pending
+  - ข้อมูลของแอปทั้งหมด (settings/API key, โมเดล, cache) อยู่ในโฟลเดอร์ data/
+
+------------------------------------------------------------
+English
+------------------------------------------------------------
+Requirements
+  - Apple Silicon Mac (M1 or later), macOS Sequoia 15.2 or later
+  - Nothing to install: Python and ffmpeg/ffprobe are included
+  - The BirdNET 3.0 model is included in data/birdnet; analysis works offline
+
+Opening the app
+  - Double-click BirdNET eBird.app on the Desktop (it uses the folder
+    Projects/Sound Recording/Programs/BirdNET-eBird-mac; keep it in place)
+  - Or double-click BirdNET-eBird.command in the program folder
+  - First run on a new Mac, if macOS blocks it: System Settings > Privacy & Security
+    > Open Anyway, or in Terminal:  xattr -dr com.apple.quarantine /path/to/BirdNET-eBird-mac
+  - To share: run tools/make_share_zip.sh; it makes a zip on the Desktop without your API keys.
+    If copying by hand, never include data/settings.json (your API keys)
+
+Using it
+  1. Click Choose audio file or Choose audio folder (top bar)
+  2. Recording details shows the detected date/time/location; enter only what is missing
+     (date 20261006, time 0929, coordinates or a Google Maps link), optionally tick the
+     Site habitat (e.g. Forest, or Forest + Marsh), then click Start analysis
+  3. When done, the Review clips tab opens; every earlier result is in the Results menu
+     (the app reopens the last result next time; no need to analyze again)
+  4. Select a clip and listen: click the picture to play from there (or ▶ Play); the line stays in the
+     middle and the picture scrolls. Macaulay-style: grayscale 0-12 kHz, 6 s at a time (Zoom − / +:
+     1.5-60 s), blue bar = where BirdNET detected it, small strip below = whole clip (click/drag to move)
+     + progress bar. Tick "BirdNET parts only" to see and play only the parts
+     where BirdNET heard the species (red line = joint).
+     "heard …" and the clock under the picture give the real time, to match with photos.
+     The .png with BirdNET boxes: the BirdNET boxes ↗ button
+  5. Helpers: Reference sounds… and Second opinion (xeno-canto API key), the eBird line
+     (eBird API key), Photos you took while the bird was heard (within 2 minutes) appear as thumbnails under the sound; click to open.
+     Buttons: eBird / Photos / Sounds / xeno-canto / Checklist (the eBird checklist this recording uses).
+     Paste your own keys in the Settings tab and click Save key.
+     The eBird line's second row says whether the species was reported in the province on the
+     same dates in past years (⚠ not reported = listen carefully; such clips show Check)
+  6. Correct the species, give an Audio quality 1-5, then ✓ Approve -> Ready or Reject (Reject = wrong
+     species; right species with poor sound = approve with quality 1; too unclear to identify =
+     Not sure, counted as neither right nor wrong). See Review progress…
+     Sound type (Song / Call / Flight call …): the app guesses song/call ("guess: song (sure)" = filled
+     in, about 9 in 10 right; "call? (not sure)" = listen and choose). It goes into the Ready file name.
+     Background species = other species heard in this clip (separated by ;). For clips not yet
+     reviewed the app fills in what BirdNET found at the same time; delete any you can't hear, click
+     the field to add more, type after ; to search names. Keep BirdNET's species as the clip's species
+     if you can still hear it, even when another one is louder. Saved in summary.xlsx (Background
+     species column) for the background species field when uploading
+     Upload the files in Ready/ to eBird / Macaulay Library
+  7. A sound BirdNET missed: ✚ Add clip yourself… (Review tab) -> Go to e.g. 15:04 -> drag on the
+     spectrogram to select it -> Ask BirdNET about the selection (a hint) or type the species
+     -> ✚ Add clip to Review, then review/approve as usual (re-analysis never removes these clips)
+  8. Find sounds ▾ (Review tab): Similar to the selected clip, Sound groups (sounds
+     BirdNET did not clip, grouped by similarity), Your recognizers (trained on clips you approved,
+     8+ per species), Near misses (sounds BirdNET almost identified, with a second look),
+     Expected species here (what the location/date model expects) — listen, select, ✚ Add selected
+  9. Faster review: click the clip list, then 1-5 = quality, Enter/A = approve, R = reject, U = not sure,
+     Space = play ("then next pending" moves on by itself); Show = only Pending / Check / …
+
+Good to know
+  - Verify every AI result by ear; confidence is not an audio-quality rating
+  - Species names follow eBird (BirdNET's Black-throated Bushtit is eBird's Black-throated Tit)
+  - Species not expected at the place and season are dropped. With a Site habitat,
+    water birds at a dry site appear only at >= 0.8, with a warning
+  - Recordings in China, Hong Kong, Taiwan, Thailand: the Checklist line next to Look up species
+    says whether the species is native, a rarity or not on the country checklist (offline).
+    "check the name" means eBird split it, e.g. Striated Heron in China = Little Heron
+  - Bottom bar: running job, ■ Stop (finished files are kept), Jobs… (queue),
+    Show details (log). Closing during analysis is safe; the next run continues
+  - UTC times in files (e.g. phone m4a) use the Mac's time zone; set it to where you recorded
+  - force redo = analyze again and reset reviews to Pending
+  - Second look (on by default, 3.0): sounds scoring 0.2 to min_conf that are expected here are
+    re-scored with the window centred on the sound; clips found this way show "(2nd look)"
+  - Listen tools… opens the Prism viewer (Display: Macaulay = the previous view);
+    its Analysis button opens Prism Analysis (spectrum, dB and peak-frequency measurements of the selection);
+    Compare with reference sounds… checks peak frequency, band and length against several species
+    (xeno-canto or your own files; files named 'XC123 - Name - Genus species' join that species);
+    Settings > BirdNET model 3.0-pruned = BirdNET's smaller model (replaces 2.4; results in _v3pruned)
+  - All app data (settings/API keys, models, caches) is in the data/ folder
+
+------------------------------------------------------------
+Please upload to eBird / Macaulay Library
+------------------------------------------------------------
+It powers global citizen science and helps train Merlin Bird ID to be
+more accurate, especially for under-sampled regions like Southeast Asia.
+
+------------------------------------------------------------
+Thanks / ขอบคุณ
+------------------------------------------------------------
+ - Biopikat (developer / page: Biopikat)
+ - Tripitcha Wanwimolruk
+ - Wichyanan Limparungpatthanakij
+ - Utain Pummarin
+ - Chutinton Viriyapanon
+ - The eBird reviewers of Thailand
+ - Cornell Lab of Ornithology (BirdNET, Merlin Bird ID, eBird / Macaulay Library)
+ - Anthropic (Claude — helped develop and write this tool)

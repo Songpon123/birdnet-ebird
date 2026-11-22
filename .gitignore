@@ -1,0 +1,20 @@
+# ขึ้น GitHub เฉพาะโค้ดและเอกสาร (whitelist) — ของอื่นในโฟลเดอร์นี้ไม่ขึ้นเอง
+# ไม่ขึ้น: data/ (API key, field log, cache เสียงอ้างอิง, โมเดล BirdNET), python/, ffmpeg, ffprobe,
+#          build/, _backup-before-upgrade/, accuracy_cases/ (เสียงที่อัดเอง), bird-finder/ (รอรุ่นถัดไป)
+/*
+!/.gitignore
+!/app/
+!/tests/
+!/tools/
+!/README.md
+!/README-H4essential-BirdNET.md
+!/อ่านก่อนใช้.txt
+!/BirdNET-eBird.command
+
+# เครื่องมือของ bird-finder: ขึ้นพร้อม bird-finder
+/tools/build_admin_regions.py
+/tools/admin-regions-sources.json
+
+__pycache__/
+*.pyc
+.DS_Store
